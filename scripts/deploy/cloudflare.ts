@@ -1,3 +1,5 @@
+// 👇 告诉 SDK 用原生 fetch 而不是 node-fetch（修复 ERR_STREAM_PREMATURE_CLOSE）
+import "cloudflare/shims/web";
 import Cloudflare from "cloudflare";
 import "dotenv/config";
 
@@ -14,7 +16,7 @@ const client = new Cloudflare({
 });
 
 /**
- * 重试包装器：专门处理 node-fetch@2 的 ERR_STREAM_PREMATURE_CLOSE
+ * 重试包装器：专门处理网络级错误
  * - 只在网络级错误时重试（非业务错误）
  * - 指数退避 + 随机 jitter，防止多实例同时重试
  */
