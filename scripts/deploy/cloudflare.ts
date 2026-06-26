@@ -1,5 +1,3 @@
-// 👇 告诉 SDK 用原生 fetch 而不是 node-fetch（修复 ERR_STREAM_PREMATURE_CLOSE）
-import "cloudflare/shims/web";
 import Cloudflare from "cloudflare";
 import "dotenv/config";
 
@@ -11,8 +9,11 @@ const DATABASE_NAME = process.env.DATABASE_NAME || "moemail-db";
 const KV_NAMESPACE_NAME = process.env.KV_NAMESPACE_NAME || "moemail-kv";
 const DATABASE_ID = process.env.DATABASE_ID;
 
+// 传入原生 fetch，跳过有 bug 的 node-fetch@2
 const client = new Cloudflare({
   apiKey: CF_API_TOKEN,
+  fetch: (url: RequestInfo | URL, init?: RequestInit) =>
+    fetch(url, init),
 });
 
 /**
